@@ -1,86 +1,75 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 
 public class Graph {
-    ArrayList<Node> nodes;
-    ArrayList<Edge> edges;
-    ArrayList<Transfer> transfers;
+    HashMap<Integer, Stop> stopMap;
 
-    Graph(String[] input) {
-        if (input != null) {
-            edges = new ArrayList<>();
-            nodes = new ArrayList<>();
-
-            // stop_times.txt
-            int previousTripID = 0;
-            int previousStopID = 0;
+    Graph(String[] inputs) {
+        if (inputs != null) {
             try {
-                BufferedReader br = new BufferedReader(new FileReader(input[0]));
+                // stops.txt
+                stopMap = new HashMap<>();
+                BufferedReader br = new BufferedReader(new FileReader(inputs[1]));
                 br.readLine(); // skip first line
                 String line = br.readLine();
                 while (line != null) {
+                    String[] split = line.split(",");
+                    Stop stop = new Stop(Integer.parseInt(split[0]), split[2]);
+                    stopMap.put(stop.getStop_id(), stop);
+                    line = br.readLine();
+                }
+
+                // transfers.txt
+                br = new BufferedReader(new FileReader(inputs[2]));
+                br.readLine(); // skip first line
+                line = br.readLine();
+                while (line != null) {
+                    String[] split = line.split(",");
+                    Stop stopA = stopMap.get(Integer.parseInt(split[0]));
+                    Stop stopB = stopMap.get(Integer.parseInt(split[1]));
+                    double weight = 2.0;
+                    if (split.length == 4) {
+                        weight = Double.parseDouble(split[3]) / 100.0;
+                    }
+                    Edge in = new Edge(stopA, stopB, weight);
+                    stopMap.get(stopA.getStop_id()).addEdge(in);
+                    line = br.readLine();
+                }
+
+                // stop_times.txt
+                br = new BufferedReader(new FileReader(inputs[0]));
+                BufferedReader br2 = new BufferedReader(new FileReader(inputs[0]));
+                br.readLine(); // skip first line
+                br2.readLine();
+                br2.readLine(); // skip first 2 lines (for reading next stop)
+                line = br.readLine();
+                String line2 = br2.readLine();
+                int previousTripID = -1;
+                while (line2 != null) {
+                    // stop A
                     line = line.replaceAll(" ", "");
                     String[] split = line.split(",");
-                    int currentTripID = Integer.parseInt(split[0]);
-                    int currentStopID = Integer.parseInt(split[3]);
+                    Stop stopA = stopMap.get(Integer.parseInt(split[3]));
+
+                    // stop B
+                    line2 = line2.replaceAll(" ", "");
+                    String[] split2 = line2.split(",");
+                    Stop stopB = stopMap.get(Integer.parseInt(split2[3]));
+                    int currentTripID = Integer.parseInt(split2[0]);
+
                     if (currentTripID == previousTripID) {
-                        transfers.add(new Transfer(previousStopID, currentStopID, 1, 1, currentTripID, split[1]));
+                        Edge in = new Edge(stopA, stopB, 1.0);
+                        stopMap.get(stopA.getStop_id()).addEdge(in);
                     }
                     previousTripID = currentTripID;
-                    previousStopID = currentStopID;
                     line = br.readLine();
+                    line2 = br2.readLine();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // transfers.txt
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(input[1]));
-                br.readLine(); // skip first line
-                String line = br.readLine();
-                while (line != null) {
-                    String[] split = line.split(",");
-                    double time = 2;
-                    if (split.length == 4) {
-                        time = Double.parseDouble(split[3]) / 100;
-                    }
-                    transfers.add(new Transfer(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), time, -1, ""));
-                    line = br.readLine();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Collections.sort(transfers, Transfer::compareTo);
-            Collections.sort(transfers, Transfer::compareFrom);
         }
-    }
-}
-
-class Node {
-    int label;
-    ArrayList<Edge> edges;
-
-    Node(int label) {
-        this.label = label;
-        edges = new ArrayList<>();
-    }
-
-    void addEdge(Edge in) {
-        edges.add(in);
-    }
-}
-
-class Edge {
-    int src, dst;
-    double cost;
-
-    Edge(int src, int dst, double cost) {
-        this.src = src;
-        this.dst = dst;
-        this.cost = cost;
     }
 }

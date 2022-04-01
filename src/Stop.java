@@ -1,9 +1,13 @@
+import java.util.ArrayList;
+
 public class Stop {
     int stop_id;
     String stop_name;
+    ArrayList<Edge> edges;
 
     Stop(int stop_id, String stop_name) {
         this.stop_id = stop_id;
+        edges = new ArrayList<>();
 
         if (stop_name.indexOf("FLAGSTOP") != -1 || stop_name.indexOf("WB") != -1 || stop_name.indexOf("NB") != -1 ||
                 stop_name.indexOf("SB") != -1 || stop_name.indexOf("EB") != -1) {
@@ -18,5 +22,9 @@ public class Stop {
 
     String getStop_name() {
         return stop_name;
+    }
+
+    void addEdge(Edge in) {
+        edges.add(in);
     }
 }
