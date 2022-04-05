@@ -9,10 +9,12 @@ public class Stop {
         this.stop_id = stop_id;
         edges = new ArrayList<>();
 
-        if (stop_name.indexOf("FLAGSTOP") != -1 || stop_name.indexOf("WB") != -1 || stop_name.indexOf("NB") != -1 ||
-                stop_name.indexOf("SB") != -1 || stop_name.indexOf("EB") != -1) {
+        if (stop_name.contains("FLAGSTOP ") || stop_name.contains("WB ") || stop_name.contains("NB ") ||
+                stop_name.contains("SB ") || stop_name.contains("EB ")) {
             String[] split = stop_name.split("\\s+", 2);
             this.stop_name = split[1] + " " + split[0];
+        } else {
+            this.stop_name = stop_name;
         }
     }
 

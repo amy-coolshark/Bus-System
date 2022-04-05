@@ -8,7 +8,10 @@ public class BusSystem {
         Graph test = new Graph(inputs);
         Dijkstra dij = new Dijkstra(test, 646, 1281);
 
-        System.out.println("Minimum Cost is:" + dij.minimumCost);
-        System.out.println("List of stops en route:\n" + dij.shortestPath);
+        System.out.println("Minimum Cost is: " + dij.minimumCost);
+        System.out.println("List of stops en route:\n");
+        //for (Edge i : dij.shortestPath) {
+        //    System.out.println(i.stopA.getStop_id());
+        //}
     }
 }

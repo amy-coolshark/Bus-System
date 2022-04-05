@@ -22,10 +22,10 @@ public class Dijkstra {
         boolean skipFirst = false;
         Edge tmp = null;
         for (int i : visited.keySet()) {
-            if (!skipFirst) {
-                skipFirst = true;
-                continue;
-            }
+            //if (!skipFirst) {
+            //    skipFirst = true;
+            //    continue;
+            //}
             int nearest = minDist(shortestDists, visited);
             visited.put(nearest, true);
 
@@ -39,7 +39,7 @@ public class Dijkstra {
             assert tmp != null;
             shortestDists.put(tmp.getStopBID(), minWeight + shortestDists.get(nearest));
             edgeTo.put(nearest, tmp);
-            if (tmp.stopB.getStop_id() == dst) break;
+            if (tmp.stopA.getStop_id() == dst) break;
         }
         minimumCost = shortestDists.get(dst);
         shortestPath = getShortest(src, dst, edgeTo);
@@ -69,7 +69,7 @@ public class Dijkstra {
             if (tmp.stopA.getStop_id() == src) {
                 srcFound = true;
             } else {
-                if (tmp.stopA != null) {
+                if (edgeTo.containsKey(tmp.stopA.getStop_id())) {
                     tmp = edgeTo.get(tmp.stopA.getStop_id());
                 } else {
                     noPathFound = true;

@@ -46,7 +46,7 @@ public class Graph {
                 br2.readLine(); // skip first 2 lines (for reading next stop)
                 line = br.readLine();
                 String line2 = br2.readLine();
-                int previousTripID = -1;
+                int previousTripID = 9017927;
                 while (line2 != null) {
                     // stop A
                     line = line.replaceAll(" ", "");
