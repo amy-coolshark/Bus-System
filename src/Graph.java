@@ -5,20 +5,25 @@ import java.util.HashMap;
 
 public class Graph {
     HashMap<Integer, Stop> stopMap;
+    TST<Integer> search;
 
     Graph(String[] inputs) {
         if (inputs != null) {
             try {
                 // stops.txt
+                search = new TST<>();
                 stopMap = new HashMap<>();
                 BufferedReader br = new BufferedReader(new FileReader(inputs[1]));
                 br.readLine(); // skip first line
                 String line = br.readLine();
                 while (line != null) {
-                    String[] split = line.split(",");
+                    String[] split = line.split(",", 3);
                     Stop stop = new Stop(Integer.parseInt(split[0]), split[2]);
                     stopMap.put(stop.getStop_id(), stop);
                     line = br.readLine();
+                }
+                for (int i : stopMap.keySet()) {
+                    search.put(stopMap.get(i).getStop_name(), 0);
                 }
 
                 // transfers.txt

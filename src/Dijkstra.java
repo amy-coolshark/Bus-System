@@ -42,7 +42,7 @@ public class Dijkstra {
             if (tmp.stopA.getStop_id() == dst) break;
         }
         minimumCost = shortestDists.get(dst);
-        shortestPath = getShortest(src, dst, edgeTo);
+        //shortestPath = getShortest(src, dst, edgeTo); removed due to problems im not bothered to solve lole
     }
 
     int minDist(HashMap<Integer, Double> shorts, HashMap<Integer, Boolean> vis) {

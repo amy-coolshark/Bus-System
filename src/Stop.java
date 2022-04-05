@@ -8,11 +8,12 @@ public class Stop {
     Stop(int stop_id, String stop_name) {
         this.stop_id = stop_id;
         edges = new ArrayList<>();
+        String[] info = stop_name.split(",", 2);
 
-        if (stop_name.contains("FLAGSTOP ") || stop_name.contains("WB ") || stop_name.contains("NB ") ||
-                stop_name.contains("SB ") || stop_name.contains("EB ")) {
-            String[] split = stop_name.split("\\s+", 2);
-            this.stop_name = split[1] + " " + split[0];
+        if (info[0].contains("FLAGSTOP ") || info[0].contains("WB ") || info[0].contains("NB ") ||
+                info[0].contains("SB ") || info[0].contains("EB ")) {
+            String[] split = info[0].split("\\s+", 2);
+            this.stop_name = split[1] + " " + split[0] + ", " + info[1];
         } else {
             this.stop_name = stop_name;
         }
