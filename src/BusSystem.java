@@ -1,4 +1,3 @@
-import java.util.Locale;
 import java.util.Scanner;
 
 public class BusSystem {
@@ -25,7 +24,7 @@ public class BusSystem {
                         int stopB = -1;
                         boolean error = false;
                         if (!back) {
-                            System.out.print("Please enter the name or ID of the starting stop(or type \"back\" to go back): ");
+                            System.out.print("Please enter the ID of the starting stop(or type \"back\" to go back): ");
                         }
                         if (in.hasNextInt()) {
                             stopA = in.nextInt();
@@ -34,13 +33,11 @@ public class BusSystem {
                             if (stopA_str.equalsIgnoreCase("back")) {
                                 back = true;
                                 continue;
-                            } else {
-                                // TODO: use TST to convert stop name to ID
                             }
                         }
 
                         if (!back) {
-                            System.out.print("Please enter the name or ID of the destination stop(or type \"back\" to go back): ");
+                            System.out.print("Please enter the ID of the destination stop(or type \"back\" to go back): ");
                         }
                         if (in.hasNextInt()) {
                             stopB = in.nextInt();
@@ -49,29 +46,54 @@ public class BusSystem {
                             if (stopB_str.equalsIgnoreCase("back")) {
                                 back = true;
                                 continue;
-                            } else {
-                                // TODO: use TST to convert stop name to ID
                             }
                         }
 
                         if ((graph.stopMap.containsKey(stopA) && graph.stopMap.containsKey(stopB)) || error) {
                             Dijkstra shortest = new Dijkstra(graph, stopA, stopB);
-                            System.out.println("The minimum cost between two stops is: " + shortest.minimumCost);
+                            if (shortest.minimumCost == Double.MAX_VALUE) {
+                                System.out.println("Could not find shortest path between inputted nodes.");
+                            } else {
+                                System.out.println("The minimum cost between two stops is: " + shortest.minimumCost);
+                            }
                         } else {
                             System.out.println("Error. Please enter a valid stop name or ID.");
                         }
                     }
                 } else if (option == 2) {
-                    System.out.print("Enter stop name to search for: ");
-                    String input = in.next();
-                    input = input.toUpperCase();
-                    if (graph.search.keysWithPrefix(input) != null) {
-                        for (String i : graph.search.keysWithPrefix(input)) {
-                            System.out.println(i);
+                    boolean back = false;
+                    while (!back) {
+                        System.out.print("Enter stop name to search for(or type \"back\" to go back): ");
+                        String input = in.next();
+                        input = input.toUpperCase();
+                        if (input.equalsIgnoreCase("back")) {
+                            back = true;
+                        } else if (graph.name_search.keysWithPrefix(input) != null) {
+                            for (String i : graph.name_search.keysWithPrefix(input)) {
+                                System.out.println(i);
+                            }
+                        } else {
+                            System.out.println("Error. Could not find results. Please enter another search term.");
                         }
                     }
                 } else if (option == 3) {
-
+                    boolean back = false;
+                    while (!back) {
+                        System.out.print("Enter desired arrival time to search in the format \"hh:mm:ss\"(or type \"back\" to go back): ");
+                        String input = in.next();
+                        String[] split = input.split(":");
+                        if (split.length == 3) {
+                            if (Integer.parseInt(split[0]) > 23 || Integer.parseInt(split[1]) > 59 || Integer.parseInt(split[2]) > 59) {
+                                System.out.println("Error. Please input a valid arrival time.");
+                            } else {
+                                graph.searchTime(input);
+                            }
+                        } else if (input.equalsIgnoreCase("back")) {
+                            back = true;
+                        } else {
+                            System.out.println("Error. Please input the arrival time in the valid format");
+                        }
+                    }
                 } else {
                     System.out.println("Error. Please enter a valid option or type quit.");
                 }

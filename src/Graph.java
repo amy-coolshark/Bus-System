@@ -1,17 +1,20 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Graph {
     HashMap<Integer, Stop> stopMap;
-    TST<Integer> search;
+    TST<Integer> name_search;
+    ArrayList<Transfer> transfers;
 
     Graph(String[] inputs) {
         if (inputs != null) {
             try {
                 // stops.txt
-                search = new TST<>();
+                transfers = new ArrayList<>();
+                name_search = new TST<>();
                 stopMap = new HashMap<>();
                 BufferedReader br = new BufferedReader(new FileReader(inputs[1]));
                 br.readLine(); // skip first line
@@ -23,7 +26,7 @@ public class Graph {
                     line = br.readLine();
                 }
                 for (int i : stopMap.keySet()) {
-                    search.put(stopMap.get(i).getStop_name(), 0);
+                    name_search.put(stopMap.get(i).getStop_name(), 0);
                 }
 
                 // transfers.txt
@@ -55,9 +58,14 @@ public class Graph {
                 while (line2 != null) {
                     // stop A
                     line = line.replaceAll(" ", "");
-                    String[] split = line.split(",");
+                    String[] split = line.split(",", 5);
                     Stop stopA = stopMap.get(Integer.parseInt(split[3]));
 
+                    // adding transfer to arraylist
+                    String[] time = split[1].split(":");
+                    if (Integer.parseInt(time[0]) < 24 || Integer.parseInt(time[1]) < 60 || Integer.parseInt(time[2]) < 60) {
+                        transfers.add(new Transfer(Integer.parseInt(split[3]), Integer.parseInt(split[0]), split[1], split[2], split[4]));
+                    }
                     // stop B
                     line2 = line2.replaceAll(" ", "");
                     String[] split2 = line2.split(",");
@@ -72,8 +80,29 @@ public class Graph {
                     line = br.readLine();
                     line2 = br2.readLine();
                 }
+                line = line.replaceAll(" ", "");
+                String[] split = line.split(",", 5);
+                String[] time = split[1].split(":");
+                if (Integer.parseInt(time[0]) < 24 || Integer.parseInt(time[1]) < 60 || Integer.parseInt(time[2]) < 60) {
+                    transfers.add(new Transfer(Integer.parseInt(split[3]), Integer.parseInt(split[0]), split[1], split[2], split[4]));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    void searchTime(String arr) {
+        for (Transfer i : transfers) {
+            if (i.arrival_time.equals(arr)) {
+                int tripID = i.trip_id;
+                boolean timeFound;
+                for (Transfer j : transfers) {
+                    timeFound = j.arrival_time.equals(arr);
+                    if (j.trip_id == tripID && timeFound) {
+                        System.out.println(j.printString());
+                    }
+                }
             }
         }
     }
