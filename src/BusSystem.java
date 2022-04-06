@@ -1,5 +1,11 @@
 import java.util.Scanner;
 
+/**
+ * The main class of the bus system.
+ * This class implements a basic command line interface for the user to interact with and generates all needed information.
+ * @Author: Abigail Amelia Amethyst
+ */
+
 public class BusSystem {
     public static void main(String[] args) {
         String[] inputs = {"stop_times.txt", "stops.txt", "transfers.txt"};
@@ -19,15 +25,16 @@ public class BusSystem {
                 int option = in.nextInt();
                 if (option == 1) {
                     boolean back = false;
+                    boolean error = false;
                     while (!back) {
                         int stopA = -1;
                         int stopB = -1;
-                        boolean error = false;
-                        if (!back) {
-                            System.out.print("Please enter the ID of the starting stop(or type \"back\" to go back): ");
-                        }
+                        System.out.print("Please enter the ID of the starting stop(or type \"back\" to go back): ");
                         if (in.hasNextInt()) {
                             stopA = in.nextInt();
+                            if (!graph.stopMap.containsKey(stopA)) {
+                                error = true;
+                            }
                         } else {
                             String stopA_str = in.next();
                             if (stopA_str.equalsIgnoreCase("back")) {
@@ -36,11 +43,12 @@ public class BusSystem {
                             }
                         }
 
-                        if (!back) {
-                            System.out.print("Please enter the ID of the destination stop(or type \"back\" to go back): ");
-                        }
+                        System.out.print("Please enter the ID of the destination stop(or type \"back\" to go back): ");
                         if (in.hasNextInt()) {
                             stopB = in.nextInt();
+                            if (!graph.stopMap.containsKey(stopB)) {
+                                error = true;
+                            }
                         } else {
                             String stopB_str = in.next();
                             if (stopB_str.equalsIgnoreCase("back")) {

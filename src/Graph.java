@@ -4,11 +4,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Custom graph class based on an edge-weighted digraph.
+ * Most functionality of the program is done here.
+ * @Author: Abigail Amelia Amethyst
+ */
+
 public class Graph {
     HashMap<Integer, Stop> stopMap;
     TST<Integer> name_search;
     ArrayList<Transfer> transfers;
 
+    /**
+     * Reads in all the files and generates the graph, TST and arrival time search functionality
+     * @param inputs - a String array of the input file names
+     */
     Graph(String[] inputs) {
         if (inputs != null) {
             try {
@@ -92,6 +102,10 @@ public class Graph {
         }
     }
 
+    /**
+     * Prints all trips sorted by trip ID based on given arrival time.
+     * @param arr - arrival time to search by
+     */
     void searchTime(String arr) {
         for (Transfer i : transfers) {
             if (i.arrival_time.equals(arr)) {

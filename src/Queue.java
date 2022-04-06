@@ -1,38 +1,44 @@
-// Queue class gotten from https://algs4.cs.princeton.edu/13stacks/Queue.java.html
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Queue class to be used by the TST class for name search functionality
+ * @param <Item> The generic type of item in the queue
+ * @Author: Princeton University (https://algs4.cs.princeton.edu/13stacks/Queue.java.html)
+ */
 
 public class Queue<Item> implements Iterable<Item> {
     private Node<Item> first;    // beginning of queue
     private Node<Item> last;     // end of queue
     private int n;               // number of elements on queue
 
+    // helper linked list class
     private static class Node<Item> {
         private Item item;
         private Node<Item> next;
     }
 
+    // Initialises an empty queue
     public Queue() {
         first = null;
         last = null;
         n = 0;
     }
 
+    /**
+     * Returns true if this queue is empty.
+     *
+     * @return {@code true} if this queue is empty; {@code false} otherwise
+     */
     public boolean isEmpty() {
         return first == null;
     }
 
-    public int size() {
-        return n;
-    }
-
-    public Item peek() {
-        if (isEmpty()) throw new NoSuchElementException("Queue underflow");
-        return first.item;
-    }
-
+    /**
+     * Adds the item to this queue.
+     *
+     * @param  item the item to add
+     */
     public void enqueue(Item item) {
         Node<Item> oldlast = last;
         last = new Node<Item>();
@@ -43,15 +49,11 @@ public class Queue<Item> implements Iterable<Item> {
         n++;
     }
 
-    public Item dequeue() {
-        if (isEmpty()) throw new NoSuchElementException("Queue underflow");
-        Item item = first.item;
-        first = first.next;
-        n--;
-        if (isEmpty()) last = null;   // to avoid loitering
-        return item;
-    }
-
+    /**
+     * Returns a string representation of this queue.
+     *
+     * @return the sequence of items in FIFO order, separated by spaces
+     */
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (Item item : this) {
@@ -61,6 +63,11 @@ public class Queue<Item> implements Iterable<Item> {
         return s.toString();
     }
 
+    /**
+     * Returns an iterator that iterates over the items in this queue in FIFO order.
+     *
+     * @return an iterator that iterates over the items in this queue in FIFO order
+     */
     public Iterator<Item> iterator() {
         return new LinkedIterator(first);
     }

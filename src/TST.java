@@ -1,4 +1,8 @@
-// TST class gotten from https://algs4.cs.princeton.edu/52trie/TST.java.html
+/**
+ * Ternary Search Tree class used for name search functionality.
+ * @param <Value> - The value used by the TST.
+ * @Author: Princeton University (https://algs4.cs.princeton.edu/52trie/TST.java.html)
+ */
 
 public class TST<Value> {
     private int n;              // size
@@ -10,13 +14,17 @@ public class TST<Value> {
         private Value val;                     // value associated with string
     }
 
+    // Initialises an empty string symbol table
     public TST() {
     }
 
-    public int size() {
-        return n;
-    }
-
+    /**
+     * Does this symbol table contain the given key?
+     * @param key the key
+     * @return {@code true} if this symbol table contains {@code key} and
+     *     {@code false} otherwise
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
     public boolean contains(String key) {
         if (key == null) {
             throw new IllegalArgumentException("argument to contains() is null");
@@ -24,6 +32,13 @@ public class TST<Value> {
         return get(key) != null;
     }
 
+    /**
+     * Returns the value associated with the given key.
+     * @param key the key
+     * @return the value associated with the given key if the key is in the symbol table
+     *     and {@code null} if the key is not in the symbol table
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
     public Value get(String key) {
         if (key == null) {
             throw new IllegalArgumentException("calls get() with null argument");
@@ -34,6 +49,7 @@ public class TST<Value> {
         return x.val;
     }
 
+    // return subtrie corresponding to given key
     private Node<Value> get(Node<Value> x, String key, int d) {
         if (x == null) return null;
         if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
@@ -44,6 +60,14 @@ public class TST<Value> {
         else return x;
     }
 
+    /**
+     * Inserts the key-value pair into the symbol table, overwriting the old value
+     * with the new value if the key is already in the symbol table.
+     * If the value is {@code null}, this effectively deletes the key from the symbol table.
+     * @param key the key
+     * @param val the value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
     public void put(String key, Value val) {
         if (key == null) {
             throw new IllegalArgumentException("calls put() with null key");
@@ -66,33 +90,12 @@ public class TST<Value> {
         return x;
     }
 
-    public String longestPrefixOf(String query) {
-        if (query == null) {
-            throw new IllegalArgumentException("calls longestPrefixOf() with null argument");
-        }
-        if (query.length() == 0) return null;
-        int length = 0;
-        Node<Value> x = root;
-        int i = 0;
-        while (x != null && i < query.length()) {
-            char c = query.charAt(i);
-            if (c < x.c) x = x.left;
-            else if (c > x.c) x = x.right;
-            else {
-                i++;
-                if (x.val != null) length = i;
-                x = x.mid;
-            }
-        }
-        return query.substring(0, length);
-    }
-
-    public Iterable<String> keys() {
-        Queue<String> queue = new Queue<String>();
-        collect(root, new StringBuilder(), queue);
-        return queue;
-    }
-
+    /**
+     * Returns all of the keys in the set that start with {@code prefix}.
+     * @param prefix the prefix
+     * @return all of the keys in the set that start with {@code prefix},
+     *     as an iterable
+     */
     public Iterable<String> keysWithPrefix(String prefix) {
         if (prefix == null) {
             return null;
@@ -105,6 +108,7 @@ public class TST<Value> {
         return queue;
     }
 
+    // all keys in subtrie rooted at x with given prefix
     private void collect(Node<Value> x, StringBuilder prefix, Queue<String> queue) {
         if (x == null) return;
         collect(x.left, prefix, queue);
@@ -112,25 +116,5 @@ public class TST<Value> {
         collect(x.mid, prefix.append(x.c), queue);
         prefix.deleteCharAt(prefix.length() - 1);
         collect(x.right, prefix, queue);
-    }
-
-    public Iterable<String> keysThatMatch(String pattern) {
-        Queue<String> queue = new Queue<String>();
-        collect(root, new StringBuilder(), 0, pattern, queue);
-        return queue;
-    }
-
-    private void collect(Node<Value> x, StringBuilder prefix, int i, String pattern, Queue<String> queue) {
-        if (x == null) return;
-        char c = pattern.charAt(i);
-        if (c == '.' || c < x.c) collect(x.left, prefix, i, pattern, queue);
-        if (c == '.' || c == x.c) {
-            if (i == pattern.length() - 1 && x.val != null) queue.enqueue(prefix.toString() + x.c);
-            if (i < pattern.length() - 1) {
-                collect(x.mid, prefix.append(x.c), i + 1, pattern, queue);
-                prefix.deleteCharAt(prefix.length() - 1);
-            }
-        }
-        if (c == '.' || c > x.c) collect(x.right, prefix, i, pattern, queue);
     }
 }
