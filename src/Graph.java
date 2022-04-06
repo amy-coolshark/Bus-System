@@ -109,14 +109,7 @@ public class Graph {
     void searchTime(String arr) {
         for (Transfer i : transfers) {
             if (i.arrival_time.equals(arr)) {
-                int tripID = i.trip_id;
-                boolean timeFound;
-                for (Transfer j : transfers) {
-                    timeFound = j.arrival_time.equals(arr);
-                    if (j.trip_id == tripID && timeFound) {
-                        System.out.println(j.printString());
-                    }
-                }
+                System.out.println(i.printString());
             }
         }
     }
