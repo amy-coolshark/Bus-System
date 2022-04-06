@@ -65,7 +65,7 @@ public class BusSystem {
                                 System.out.println("The minimum cost between two stops is: " + shortest.minimumCost);
                             }
                         } else {
-                            System.out.println("Error. Please enter a valid stop name or ID.");
+                            System.out.println("Error. Please enter a valid ID.");
                         }
                     }
                 } else if (option == 2) {
